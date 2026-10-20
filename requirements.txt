@@ -1,4 +1,9 @@
-Django
-dj-database-url
-python-dotenv
+Django>=5.0
 whitenoise
+dj-database-url
+psycopg[binary]>=3.1
+PyMuPDF
+python-docx
+scikit-learn
+google-genai
+python-dotenv
