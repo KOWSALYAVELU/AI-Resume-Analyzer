@@ -1,0 +1,164 @@
+ {% extends "resumes/base.html" %}
+
+{% block title %}ResumeMate AI | Home{% endblock %}
+
+{% block content %}
+
+<section class="hero">
+
+    <div class="hero-content">
+
+        <span class="hero-badge">✦ AI-POWERED CAREER TOOL</span>
+
+        <h1>
+            Analyze Your Resume
+            with <span class="highlight">AI</span>
+        </h1>
+
+        <p>
+            Get ATS scores, skill insights, and improvements instantly.
+        </p>
+
+        <div class="hero-actions">
+            <a href="{% url 'analyze_resume' %}" class="button button-primary">
+                ⬆ Upload Resume &nbsp;›
+            </a>
+            <span class="file-note">PDF, DOCX &nbsp;·&nbsp; Max 5 MB</span>
+        </div>
+
+    </div>
+
+    <div class="ats-preview">
+
+        <div class="ats-preview-head">
+            <div>
+                <h3>Overall ATS Compatibility</h3>
+                <p>Sample preview of your results</p>
+            </div>
+        </div>
+
+        <div class="ats-preview-body">
+
+            <div class="ring-wrap">
+                <div class="score-ring" style="--score: 88;">
+                    <div class="score-ring-inner">
+                        <strong>88</strong>
+                        <span>/100</span>
+                    </div>
+                </div>
+                <span class="status-pill">Excellent</span>
+            </div>
+
+            <div class="preview-bars">
+                <div class="progress-row">
+                    <div class="progress-label">
+                        <span>ATS Readiness</span><strong>91%</strong>
+                    </div>
+                    <div class="progress-track">
+                        <div class="progress-fill" style="width: 91%;"></div>
+                    </div>
+                </div>
+
+                <div class="progress-row">
+                    <div class="progress-label">
+                        <span>Keyword Match</span><strong>82%</strong>
+                    </div>
+                    <div class="progress-track">
+                        <div class="progress-fill green" style="width: 82%;"></div>
+                    </div>
+                </div>
+
+                <div class="progress-row">
+                    <div class="progress-label">
+                        <span>Resume Quality</span><strong>78%</strong>
+                    </div>
+                    <div class="progress-track">
+                        <div class="progress-fill orange" style="width: 78%;"></div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        <div class="mini-stats">
+            <div><span>Total Skills</span><strong>12</strong></div>
+            <div><span>Missing Skills</span><strong>5</strong></div>
+        </div>
+
+    </div>
+
+</section>
+
+
+<section class="home-panels">
+
+    <article class="panel-card">
+        <h3>Skills Detected</h3>
+        <div class="skill-tags">
+            <span class="skill-tag">Python</span>
+            <span class="skill-tag">Django</span>
+            <span class="skill-tag">JavaScript</span>
+            <span class="skill-tag">HTML</span>
+            <span class="skill-tag">CSS</span>
+            <span class="skill-tag">MySQL</span>
+            <span class="skill-tag">Git</span>
+            <span class="skill-tag">GitHub</span>
+            <span class="skill-tag">REST API</span>
+        </div>
+    </article>
+
+    <article class="panel-card">
+        <h3>Missing Keywords</h3>
+        <ul class="missing-list">
+            <li>Docker</li>
+            <li>AWS</li>
+            <li>Kubernetes</li>
+            <li>System Design</li>
+        </ul>
+    </article>
+
+</section>
+
+
+<section class="features">
+
+    <div class="section-heading">
+        <span class="eyebrow">WHAT YOU CAN DO</span>
+        <h2>Understand Your Resume Better</h2>
+        <p>
+            Useful insights to help you improve your resume
+            for your target role.
+        </p>
+    </div>
+
+    <div class="feature-grid">
+
+        <article class="feature-card">
+            <h3>Resume Analysis</h3>
+            <p>
+                Review resume sections, skills, keywords,
+                and content completeness.
+            </p>
+        </article>
+
+        <article class="feature-card">
+            <h3>Job Matching</h3>
+            <p>
+                Compare your resume with a job description
+                and identify matching skills.
+            </p>
+        </article>
+
+        <article class="feature-card">
+            <h3>AI Feedback</h3>
+            <p>
+                Get personalized suggestions, grammar checks
+                and an AI-improved resume.
+            </p>
+        </article>
+
+    </div>
+
+</section>
+
+{% endblock %}

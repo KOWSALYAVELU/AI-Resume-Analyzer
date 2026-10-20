@@ -1,0 +1,454 @@
+ {% extends "resumes/base.html" %}
+
+{% block title %}
+    AI Resume Analyzer | ResumeAI
+{% endblock %}
+
+{% block content %}
+
+<section class="analyzer-page">
+
+    <div class="analyzer-heading">
+
+        <div>
+            <span class="eyebrow">AI-POWERED CAREER TOOL</span>
+
+            <h1>Resume Analyzer</h1>
+
+            <p>
+                Discover your resume strengths, identify missing
+                skills, and improve your job application.
+            </p>
+        </div>
+
+        <div class="heading-badge">
+            ✦ Smart Resume Analysis
+        </div>
+
+    </div>
+
+
+    <div class="analyzer-grid">
+
+        <!-- LEFT SIDE: UPLOAD FORM -->
+
+        <section class="upload-card">
+
+            <div class="card-heading">
+
+                <div class="heading-icon">↑</div>
+
+                <div>
+                    <h2>Upload Your Resume</h2>
+                    <p>Start your personalized resume analysis.</p>
+                </div>
+
+            </div>
+
+
+            <form
+                method="post"
+                enctype="multipart/form-data"
+                class="analyzer-form"
+            >
+
+                {% csrf_token %}
+
+                {% if form.non_field_errors %}
+                    <div class="form-errors">
+                        {{ form.non_field_errors }}
+                    </div>
+                {% endif %}
+
+
+                <div class="upload-area">
+
+                    <div class="upload-icon">↑</div>
+
+                    <h3>Upload your resume</h3>
+
+                    <p>Choose a PDF or DOCX file from your computer.</p>
+
+                    {{ form.resume }}
+
+                    <small>Maximum file size: 5 MB</small>
+
+                    {% if form.resume.errors %}
+                        <div class="form-errors">
+                            {{ form.resume.errors }}
+                        </div>
+                    {% endif %}
+
+                </div>
+
+
+                <div class="form-group">
+
+                    <label for="{{ form.job_description.id_for_label }}">
+                        Target Job Description
+                    </label>
+
+                    <p class="field-description">
+                        Paste the job requirements you want to match.
+                    </p>
+
+                    {{ form.job_description }}
+
+                    {% if form.job_description.errors %}
+                        <div class="form-errors">
+                            {{ form.job_description.errors }}
+                        </div>
+                    {% endif %}
+
+                </div>
+
+                <button type="submit" class="analyze-button">
+                    Analyze My Resume
+                    <span>→</span>
+                </button>
+
+                <button
+                    type="submit"
+                    formaction="{% url 'improved_resume' %}"
+                    class="analyze-button secondary-button"
+                >
+                    Download AI-Improved Resume (DOCX)
+                    <span>↓</span>
+                </button>
+
+                <p class="privacy-note">
+                    Your resume text may be sent to an AI service
+                    (Google Gemini) to generate feedback, grammar checks
+                    and the improved resume. Do not upload documents you
+                    do not have permission to share.
+                </p>
+
+                <p class="privacy-note">
+                    The AI-improved resume requires login. Please review
+                    it carefully before using it.
+                </p>
+
+            </form>
+
+        </section>
+
+
+        <!-- RIGHT SIDE: FEATURE PREVIEW -->
+
+        <aside class="insights-card">
+
+            <span class="eyebrow">YOUR CAREER ASSISTANT</span>
+
+            <h2>
+                Understand your resume.
+                Improve your opportunities.
+            </h2>
+
+            <p class="insights-description">
+                Get useful feedback based on your resume
+                and the job description you provide.
+            </p>
+
+
+            <div class="insight-item">
+                <div class="insight-icon purple-icon">✓</div>
+                <div>
+                    <h3>Resume Quality</h3>
+                    <p>Review resume structure and completeness.</p>
+                </div>
+            </div>
+
+            <div class="insight-item">
+                <div class="insight-icon blue-icon">%</div>
+                <div>
+                    <h3>Job Compatibility</h3>
+                    <p>Compare skills against job requirements.</p>
+                </div>
+            </div>
+
+            <div class="insight-item">
+                <div class="insight-icon green-icon">✦</div>
+                <div>
+                    <h3>AI Suggestions</h3>
+                    <p>Discover ways to improve your resume.</p>
+                </div>
+            </div>
+
+
+            <div class="insights-note">
+                <strong>Our goal</strong>
+                <p>
+                    Help you understand your resume and make
+                    informed improvements before applying.
+                </p>
+            </div>
+
+        </aside>
+
+    </div>
+
+
+    <!-- RESULTS: DISPLAY ONLY AFTER ANALYSIS -->
+
+    {% if result %}
+
+    <section class="analysis-results" id="results">
+
+        <div class="results-heading">
+            <div>
+                <span class="eyebrow">ANALYSIS COMPLETE</span>
+
+                <h2>Your Resume Insights</h2>
+
+                <p>
+                    Review your results and identify areas
+                    for improvement.
+                </p>
+            </div>
+        </div>
+
+
+        <!-- SCORE RING + PROGRESS BARS -->
+
+        <div class="ats-overview">
+
+            <div class="score-ring-card">
+                <div
+                    class="score-ring"
+                    style="--score: {{ result.resume_score }};"
+                >
+                    <div class="score-ring-inner">
+                        <strong>{{ result.resume_score }}</strong>
+                        <span>/100</span>
+                    </div>
+                </div>
+                <p>Overall Resume Score</p>
+            </div>
+
+            <div class="progress-card">
+
+                <div class="progress-row">
+                    <div class="progress-label">
+                        <span>Resume Quality</span>
+                        <strong>{{ result.resume_score }}%</strong>
+                    </div>
+                    <div class="progress-track">
+                        <div class="progress-fill" style="width: {{ result.resume_score }}%;"></div>
+                    </div>
+                </div>
+
+                <div class="progress-row">
+                    <div class="progress-label">
+                        <span>Job Match</span>
+                        <strong>{{ result.job_match.match_score }}%</strong>
+                    </div>
+                    <div class="progress-track">
+                        <div class="progress-fill green" style="width: {{ result.job_match.match_score }}%;"></div>
+                    </div>
+                </div>
+
+                <div class="progress-row">
+                    <div class="progress-label">
+                        <span>Text Similarity</span>
+                        <strong>{{ result.job_match.similarity_score }}%</strong>
+                    </div>
+                    <div class="progress-track">
+                        <div class="progress-fill orange" style="width: {{ result.job_match.similarity_score }}%;"></div>
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- METRIC CARDS -->
+
+        <div class="metrics-grid">
+
+            <article class="metric-card">
+                <span>Resume Quality Score</span>
+                <strong>{{ result.resume_score }}<small>/100</small></strong>
+                <p>Based on the current resume checks.</p>
+            </article>
+
+            <article class="metric-card">
+                <span>Job Match</span>
+                <strong>{{ result.job_match.match_score }}%</strong>
+                <p>Based on detected required skills.</p>
+            </article>
+
+            <article class="metric-card">
+                <span>Text Similarity</span>
+                <strong>{{ result.job_match.similarity_score }}%</strong>
+                <p>NLP (TF-IDF) similarity with the job description.</p>
+            </article>
+
+            <article class="metric-card">
+                <span>Detected Skills</span>
+                <strong>{{ result.skills|length }}</strong>
+                <p>Skills identified by our current dictionary.</p>
+            </article>
+
+            <article class="metric-card">
+                <span>Missing Skills</span>
+                <strong>{{ result.job_match.missing_skills|length }}</strong>
+                <p>Requirements not detected in the resume.</p>
+            </article>
+
+        </div>
+
+
+        <!-- STRENGTHS / IMPROVEMENTS -->
+
+        <div class="results-grid strengths-grid">
+
+                      <article class="result-panel">
+                <h3>✅ Strengths</h3>
+                <ul class="check-list">
+                    {% if result.checks.contact_details %}<li>Email found</li>{% endif %}
+                    {% if result.checks.phone %}<li>Phone number found</li>{% endif %}
+                    {% if result.checks.links %}<li>GitHub / LinkedIn mentioned</li>{% endif %}
+                    {% if result.checks.summary %}<li>Summary section present</li>{% endif %}
+                    {% if result.checks.education %}<li>Education section present</li>{% endif %}
+                    {% if result.checks.skills %}<li>Skills section present</li>{% endif %}
+                    {% if result.checks.projects %}<li>Projects section present</li>{% endif %}
+                    {% if result.checks.experience %}<li>Experience / internship section present</li>{% endif %}
+                    {% if result.checks.action_verbs %}<li>Uses strong action verbs</li>{% endif %}
+                    {% if result.checks.bullets %}<li>Uses bullet points</li>{% endif %}
+                    {% if result.checks.metrics %}<li>Includes numbers / measurable results</li>{% endif %}
+                    {% if result.checks.readability %}<li>Good resume length</li>{% endif %}
+                </ul>
+            </article>
+
+            <article class="result-panel">
+                <h3>⚠️ Improvements</h3>
+                <ul class="check-list warn">
+                    {% if not result.checks.contact_details %}<li>Add a professional email address</li>{% endif %}
+                    {% if not result.checks.phone %}<li>Add a phone number</li>{% endif %}
+                    {% if not result.checks.links %}<li>Add your GitHub or LinkedIn link</li>{% endif %}
+                    {% if not result.checks.summary %}<li>Add a short summary at the top</li>{% endif %}
+                    {% if not result.checks.education %}<li>Add an Education section</li>{% endif %}
+                    {% if not result.checks.skills %}<li>Add a Skills section</li>{% endif %}
+                    {% if not result.checks.projects %}<li>Add a Projects section</li>{% endif %}
+                    {% if not result.checks.experience %}<li>Add an Experience or Internship section (if you have one)</li>{% endif %}
+                    {% if not result.checks.action_verbs %}<li>Start bullets with action verbs</li>{% endif %}
+                    {% if not result.checks.bullets %}<li>Use bullet points for projects and work</li>{% endif %}
+                    {% if not result.checks.metrics %}<li>Add numbers where true (e.g. 30% faster)</li>{% endif %}
+                    {% if not result.checks.readability %}<li>Keep the resume between 150 and 900 words</li>{% endif %}
+                    {% if result.resume_score == 100 %}<li>No major structure issues found</li>{% endif %}
+                </ul>
+            </article>
+
+        </div>
+
+
+        <!-- SKILLS + SUGGESTIONS + AI FEEDBACK -->
+
+        <div class="results-grid">
+
+            <article class="result-panel">
+                <h3>Detected Skills</h3>
+                <div class="skill-tags">
+                    {% for skill in result.skills %}
+                        <span class="skill-tag">{{ skill }}</span>
+                    {% empty %}
+                        <p>No skills were detected.</p>
+                    {% endfor %}
+                </div>
+            </article>
+
+            <article class="result-panel">
+                <h3>Matched Skills</h3>
+                <div class="skill-tags">
+                    {% for skill in result.job_match.matched_skills %}
+                        <span class="skill-tag matched-tag">{{ skill }}</span>
+                    {% empty %}
+                        <p>No matching skills were detected.</p>
+                    {% endfor %}
+                </div>
+            </article>
+
+            <article class="result-panel">
+                <h3>Missing Skills</h3>
+                <div class="skill-tags">
+                    {% for skill in result.job_match.missing_skills %}
+                        <span class="skill-tag missing-tag">{{ skill }}</span>
+                    {% empty %}
+                        <p>
+                            No missing skills were detected
+                            by the current skill dictionary.
+                        </p>
+                    {% endfor %}
+                </div>
+                <p class="result-disclaimer">
+                    Add a skill to your resume only if you
+                    genuinely have that skill.
+                </p>
+            </article>
+
+            <article class="result-panel">
+                <h3>Resume Improvement Suggestions</h3>
+                <ul class="suggestion-list">
+                    {% for suggestion in result.suggestions %}
+                        <li>{{ suggestion }}</li>
+                    {% empty %}
+                        <li>No additional suggestions were generated.</li>
+                    {% endfor %}
+                </ul>
+            </article>
+
+            <article class="result-panel full-width">
+                <h3>✦ AI Career Coach Feedback</h3>
+
+                {% if result.llm_feedback %}
+                    <ul class="suggestion-list">
+                        {% for tip in result.llm_feedback %}
+                            <li>{{ tip }}</li>
+                        {% endfor %}
+                    </ul>
+                {% else %}
+                    <p class="result-disclaimer">
+                        AI feedback is not available right now.
+                    </p>
+                {% endif %}
+            </article>
+
+            <article class="result-panel full-width">
+                <h3>📝 Grammar &amp; Spelling Check</h3>
+
+                {% if result.grammar_issues is None %}
+                    <p class="result-disclaimer">
+                        Grammar check is not available right now.
+                    </p>
+                {% elif result.grammar_issues %}
+                    <ul class="grammar-list">
+                        {% for item in result.grammar_issues %}
+                            <li>
+                                <span class="grammar-issue">{{ item.issue }}</span>
+                                <span class="grammar-fix">→ {{ item.fix }}</span>
+                            </li>
+                        {% endfor %}
+                    </ul>
+                {% else %}
+                    <p class="check-list">
+                        ✅ No grammar or spelling mistakes found.
+                    </p>
+                {% endif %}
+             </article>
+
+        </div>
+
+    </section>
+
+    {% endif %}
+
+</section>
+
+{% if result %}
+<script>
+    document.getElementById("results").scrollIntoView({ behavior: "smooth" });
+</script>
+{% endif %}
+
+{% endblock %}

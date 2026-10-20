@@ -1,0 +1,68 @@
+ {% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>{% block title %}ResumeMate AI{% endblock %}</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
+        rel="stylesheet"
+    >
+
+   <link rel="stylesheet" href="{% static 'resumes/css/style.css' %}?v=2">
+</head>
+
+<body>
+
+    <header class="site-header">
+        <nav>
+            <a href="{% url 'home' %}" class="brand">
+                <span class="brand-icon">✦</span>
+                <strong>ResumeMate</strong>
+                <span class="brand-ai">AI</span>
+            </a>
+
+            <div class="nav-links">
+                <a href="{% url 'home' %}">Home</a>
+                <a href="{% url 'analyze_resume' %}">Analyzer</a>
+                {% if user.is_authenticated %}
+                    <a href="{% url 'history' %}">History</a>
+                {% endif %}
+            </div>
+
+            <div class="nav-user">
+                {% if user.is_authenticated %}
+                    <span class="user-pill">Hi, {{ user.username }}</span>
+
+                    <form method="post" action="{% url 'logout' %}">
+                        {% csrf_token %}
+                        <button type="submit" class="nav-logout">Logout</button>
+                    </form>
+                {% else %}
+                    <a href="{% url 'login' %}">Login</a>
+                    <a href="{% url 'register' %}" class="nav-cta">Register</a>
+                {% endif %}
+            </div>
+        </nav>
+    </header>
+
+    <main>
+        {% block content %}
+        {% endblock %}
+    </main>
+
+    <footer>
+        ResumeMate AI · Resume Analyzer &amp; Job Matcher
+    </footer>
+
+    <script src="{% static 'resumes/js/app.js' %}"></script>
+
+</body>
+
+</html>

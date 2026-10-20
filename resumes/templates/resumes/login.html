@@ -1,0 +1,26 @@
+{% extends "resumes/base.html" %}
+
+{% block title %}Login | ResumeAI{% endblock %}
+
+{% block content %}
+<section class="analyzer-page">
+    <div class="upload-card auth-card">
+        <h2>Login</h2>
+
+        <form method="post">
+            {% csrf_token %}
+
+            {{ form.as_p }}
+
+            <button type="submit" class="analyze-button">
+                Login <span>→</span>
+            </button>
+        </form>
+
+        <p class="privacy-note">
+            New here?
+            <a href="{% url 'register' %}">Create an account</a>
+        </p>
+    </div>
+</section>
+{% endblock %}

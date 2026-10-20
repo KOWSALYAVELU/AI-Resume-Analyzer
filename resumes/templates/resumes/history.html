@@ -1,0 +1,63 @@
+ {% extends "resumes/base.html" %}
+
+{% block title %}History | ResumeAI{% endblock %}
+
+{% block content %}
+
+<section class="analyzer-page">
+
+    <div class="analyzer-heading">
+        <div>
+            <span class="eyebrow">YOUR ACTIVITY</span>
+            <h1>Analysis History</h1>
+            <p>Review your previous resume analyses.</p>
+        </div>
+
+        <a href="{% url 'analyze_resume' %}" class="button button-primary">
+            New Analysis
+        </a>
+    </div>
+
+    <div class="history-list">
+
+        {% for item in analyses %}
+
+        <article class="history-card">
+
+            <div class="history-info">
+                <h3>{{ item.resume_name }}</h3>
+                <p>{{ item.created_at|date:"d M Y, H:i" }}</p>
+
+                <div class="skill-tags">
+                    {% for skill in item.missing_skills|slice:":4" %}
+                        <span class="skill-tag missing-tag">{{ skill }}</span>
+                    {% endfor %}
+                </div>
+            </div>
+
+            <div class="history-scores">
+                <div>
+                    <strong>{{ item.resume_score }}<small>/100</small></strong>
+                    <span>Resume Score</span>
+                </div>
+                <div>
+                    <strong>{{ item.match_score }}%</strong>
+                    <span>Job Match</span>
+                </div>
+            </div>
+
+        </article>
+
+        {% empty %}
+
+        <div class="result-panel">
+            <p>No analyses yet. Upload a resume to get started.</p>
+        </div>
+
+        {% endfor %}
+
+    </div>
+
+</section>
+
+{% endblock %}
